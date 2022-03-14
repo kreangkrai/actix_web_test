@@ -1,5 +1,5 @@
 use actix_web::{web,Error,HttpResponse};
-use crate::common::{Product};
+use crate::models::{Product};
 
 use crate::repository::{product};
 

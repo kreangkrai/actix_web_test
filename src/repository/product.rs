@@ -1,7 +1,7 @@
 use tokio;
 use crate::databases::db::DB;
 use tokio_postgres::{NoTls};
-use crate::common::{Product};
+use crate::models::{Product};
 
 pub async fn gets()->Result<Vec<Product>,tokio_postgres::Error>{
     let (client, connection) =
