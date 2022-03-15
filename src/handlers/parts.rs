@@ -26,23 +26,23 @@ pub async fn remove_part(_id :web::Path<String>)->Result<HttpResponse,Error>{
     Ok(HttpResponse::Ok().json(data.unwrap()))
 }
 
-#[cfg(test)]
-mod tests{
-    use crate::app_config::config_app;
-    use actix_web::dev::Service;
-    use actix_web::{http::{header,StatusCode},test,App,};
+// #[cfg(test)]
+// mod tests{
+//     use crate::app_config::config_app;
+//     use actix_web::dev::Service;
+//     use actix_web::{http::{header,StatusCode},test,App,};
 
-    #[actix_web::test]
-    async fn test_add_part(){
-        let app = test::init_service(App::new().configure(config_app)).await;
-        let payload = r#"{"id":"P001","part_type":"funcy","name":"test"}"#.as_bytes();
-        let req = test::TestRequest::post()
-        .uri("/parts")
-        .insert_header((header::CONTENT_TYPE,"application/json"))
-        .set_payload(payload)
-        .to_request();
+//     #[actix_web::test]
+//     async fn test_add_part(){
+//         let app = test::init_service(App::new().configure(config_app)).await;
+//         let payload = r#"{"id":"P001","part_type":"funcy","name":"test"}"#.as_bytes();
+//         let req = test::TestRequest::post()
+//         .uri("/parts")
+//         .insert_header((header::CONTENT_TYPE,"application/json"))
+//         .set_payload(payload)
+//         .to_request();
 
-        let resp = app.call(req).await.unwrap();
-        assert_eq!(resp.status(),StatusCode::OK);
-    }
-}
+//         let resp = app.call(req).await.unwrap();
+//         assert_eq!(resp.status(),StatusCode::OK);
+//     }
+// }
