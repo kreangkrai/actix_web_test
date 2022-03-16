@@ -1,29 +1,44 @@
-use actix_web::{web,Error,HttpResponse};
+use actix_web::{web,HttpResponse};
 use crate::models::{Product};
 
 use crate::repository::{product};
-
-pub async fn get_products() -> Result<HttpResponse,Error>{ 
-    let data = product::gets().await;   
-    Ok(HttpResponse::Ok().json(data.unwrap()))
+use crate::errors::MyError;
+pub async fn get_products() -> Result<HttpResponse,MyError>{ 
+    let data = product::gets().await;
+    match data{
+        Ok(s) => Ok(HttpResponse::Ok().json(s)),       
+        Err(e) => Err(MyError::PGError(e))
+    }    
 }
-pub async fn get_productbyid(_id: web::Path<String>) -> Result<HttpResponse,Error>{ 
+pub async fn get_productbyid(_id: web::Path<String>) -> Result<HttpResponse,MyError>{ 
     let data = product::get(_id.into_inner()).await;   
-    Ok(HttpResponse::Ok().json(data.unwrap()))
+    match data{
+        Ok(s) => Ok(HttpResponse::Ok().json(s)),       
+        Err(e) => Err(MyError::PGError(e))  
+    } 
 }
-pub async fn update_product(_product: web::Json<Product>) -> Result<HttpResponse,Error>{
+pub async fn update_product(_product: web::Json<Product>) -> Result<HttpResponse,MyError>{
     let p:Product = Product{id:_product.id.to_string(),product_type:_product.product_type.to_string(),name:_product.name.to_string()};
     let data = product::update(p).await;
-    Ok(HttpResponse::Ok().json(data.unwrap()))
+    match data{
+        Ok(s) => Ok(HttpResponse::Ok().json(s)),       
+        Err(e) => Err(MyError::PGError(e)) 
+    } 
 }
-pub async fn add_product(_product:web::Json<Product>) -> Result<HttpResponse,Error>{
+pub async fn add_product(_product:web::Json<Product>) -> Result<HttpResponse,MyError>{
     let p:Product = Product{id:_product.id.to_string(),product_type:_product.product_type.to_string(),name:_product.name.to_string()};
     let data = product::insert(p).await;
-    Ok(HttpResponse::Ok().json(data.unwrap()))
+    match data{
+        Ok(s) => Ok(HttpResponse::Ok().json(s)),       
+        Err(e) => Err(MyError::PGError(e))
+    } 
 }
-pub async fn remove_product(_id :web::Path<String>)->Result<HttpResponse,Error>{
+pub async fn remove_product(_id :web::Path<String>)->Result<HttpResponse,MyError>{
     let data = product::delete(_id.into_inner()).await;
-    Ok(HttpResponse::Ok().json(data.unwrap()))
+    match data{
+        Ok(s) => Ok(HttpResponse::Ok().json(s)),       
+        Err(e) => Err(MyError::PGError(e))
+    }
 }
 
 // #[cfg(test)]
