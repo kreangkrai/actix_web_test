@@ -24,7 +24,7 @@ pub async fn gets()->Result<Vec<Product>,tokio_postgres::Error>{
                         
         products.push(Product{id:id,product_type:product_type,name:name});
     } 
-    Ok(products)      
+    Ok(products)
 }
 
 pub async fn get(_id : String)->Result<Vec<Product>,tokio_postgres::Error>{

@@ -1,63 +1,52 @@
-use actix_web::{web,HttpResponse};
+use actix_web::{http,web,HttpResponse,HttpRequest};
 use crate::models::{Product};
-
 use crate::repository::{product};
 use crate::errors::MyError;
-pub async fn get_products() -> Result<HttpResponse,MyError>{ 
-    let data = product::gets().await;
-    match data{
-        Ok(s) => Ok(HttpResponse::Ok().json(s)),       
-        Err(e) => Err(MyError::PGError(e))
-    }    
-}
-pub async fn get_productbyid(_id: web::Path<String>) -> Result<HttpResponse,MyError>{ 
-    let data = product::get(_id.into_inner()).await;   
-    match data{
-        Ok(s) => Ok(HttpResponse::Ok().json(s)),       
-        Err(e) => Err(MyError::PGError(e))  
-    } 
-}
-pub async fn update_product(_product: web::Json<Product>) -> Result<HttpResponse,MyError>{
-    let p:Product = Product{id:_product.id.to_string(),product_type:_product.product_type.to_string(),name:_product.name.to_string()};
-    let data = product::update(p).await;
-    match data{
-        Ok(s) => Ok(HttpResponse::Ok().json(s)),       
-        Err(e) => Err(MyError::PGError(e)) 
-    } 
-}
-pub async fn add_product(_product:web::Json<Product>) -> Result<HttpResponse,MyError>{
-    let p:Product = Product{id:_product.id.to_string(),product_type:_product.product_type.to_string(),name:_product.name.to_string()};
-    let data = product::insert(p).await;
-    match data{
-        Ok(s) => Ok(HttpResponse::Ok().json(s)),       
-        Err(e) => Err(MyError::PGError(e))
-    } 
-}
-pub async fn remove_product(_id :web::Path<String>)->Result<HttpResponse,MyError>{
-    let data = product::delete(_id.into_inner()).await;
-    match data{
-        Ok(s) => Ok(HttpResponse::Ok().json(s)),       
-        Err(e) => Err(MyError::PGError(e))
+
+pub async fn get_products(req: HttpRequest) -> Result<HttpResponse,MyError>{ 
+    if let Some(hdr) = req.headers().get(http::header::CONTENT_TYPE) {
+        if let Ok(_s) = hdr.to_str() {
+            let data = product::gets().await?;
+            return Ok(HttpResponse::Ok().json(data));
+        }
     }
+    Ok(HttpResponse::BadRequest().into())
 }
-
-// #[cfg(test)]
-// mod tests{
-//     use crate::app_config::config_app;
-//     use actix_web::dev::Service;
-//     use actix_web::{http::{header,StatusCode},test,App,};
-
-//     #[actix_web::test]
-//     async fn test_add_product(){
-//         let app = test::init_service(App::new().configure(config_app)).await;
-//         let payload = r#"{"id":"P001","product_type":"funcy","name":"test"}"#.as_bytes();
-//         let req = test::TestRequest::post()
-//         .uri("/products")
-//         .insert_header((header::CONTENT_TYPE,"application/json"))
-//         .set_payload(payload)
-//         .to_request();
-
-//         let resp = app.call(req).await.unwrap();
-//         assert_eq!(resp.status(),StatusCode::OK);
-//     }
-// }
+pub async fn get_productbyid(req: HttpRequest,_id: web::Path<String>) -> Result<HttpResponse,MyError>{ 
+    if let Some(hdr) = req.headers().get(http::header::CONTENT_TYPE) {
+        if let Ok(_s) = hdr.to_str() {
+            let data = product::get(_id.into_inner()).await?;
+            return Ok(HttpResponse::Ok().json(data));
+        }
+    }
+    Ok(HttpResponse::BadRequest().into())
+}
+pub async fn update_product(req: HttpRequest,_product: web::Json<Product>) -> Result<HttpResponse,MyError>{
+    if let Some(hdr) = req.headers().get(http::header::CONTENT_TYPE) {
+        if let Ok(_s) = hdr.to_str() {
+            let p:Product = Product{id:_product.id.to_string(),product_type:_product.product_type.to_string(),name:_product.name.to_string()};
+            let data = product::update(p).await?;
+            return Ok(HttpResponse::Ok().json(data));
+        } 
+    }
+    Ok(HttpResponse::BadRequest().into())
+}
+pub async fn add_product(req: HttpRequest,_product:web::Json<Product>) -> Result<HttpResponse,MyError>{
+    if let Some(hdr) = req.headers().get(http::header::CONTENT_TYPE) {
+        if let Ok(_s) = hdr.to_str() {
+            let p:Product = Product{id:_product.id.to_string(),product_type:_product.product_type.to_string(),name:_product.name.to_string()};
+            let data = product::insert(p).await?;
+            return Ok(HttpResponse::Ok().json(data));   
+        }
+    } 
+    Ok(HttpResponse::BadRequest().into())
+}
+pub async fn remove_product(req: HttpRequest,_id :web::Path<String>)->Result<HttpResponse,MyError>{
+    if let Some(hdr) = req.headers().get(http::header::CONTENT_TYPE) {
+        if let Ok(_s) = hdr.to_str() {
+            let data = product::delete(_id.into_inner()).await?;
+            return Ok(HttpResponse::Ok().json(data));  
+        }
+    }
+    Ok(HttpResponse::BadRequest().into())
+}

@@ -185,6 +185,7 @@ dependencies = [
 name = "actix_web_test"
 version = "0.1.0"
 dependencies = [
+ "actix-service",
  "actix-web",
  "config",
  "deadpool-postgres",
