@@ -1,6 +1,6 @@
 # actix_web_test
 
-postgres database
+postgres database\n
 https://www.elephantsql.com/
 
 table
