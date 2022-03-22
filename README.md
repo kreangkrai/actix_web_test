@@ -1,4 +1,4 @@
-# actix_web_test
+# actix web api
 
 # postgres database
     https://www.elephantsql.com/
