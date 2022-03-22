@@ -1,13 +1,13 @@
 # actix_web_test
 
-postgres database
+# postgres database
     https://www.elephantsql.com/
 
-table
+# table
     products
     parts
 
-test
+# test
     cargo test --lib
     cargo test --lib products
     cargo test --lib parts
