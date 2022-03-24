@@ -9,5 +9,5 @@
 
 #### **test**
     cargo test --lib
-    cargo test --lib products
-    cargo test --lib parts
+    cargo test --lib product_test
+    cargo test --lib part_test
