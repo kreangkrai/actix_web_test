@@ -3,8 +3,6 @@ name = "actix_web_test"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 actix-web = { version = "4" }
 actix-service = "2.0.2"
@@ -19,4 +17,3 @@ derive_more = "0.99.2"
 dotenv = "0.15.0"
 tokio-pg-mapper = "0.2.0"
 tokio-pg-mapper-derive = "0.2.0"
-

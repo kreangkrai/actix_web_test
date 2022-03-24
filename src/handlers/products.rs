@@ -24,7 +24,8 @@ pub async fn get_productbyid(req: HttpRequest,_id: web::Path<String>) -> Result<
 pub async fn update_product(req: HttpRequest,_product: web::Json<Product>) -> Result<HttpResponse,MyError>{
     if let Some(hdr) = req.headers().get(http::header::CONTENT_TYPE) {
         if let Ok(_s) = hdr.to_str() {
-            let p:Product = Product{id:_product.id.to_string(),product_type:_product.product_type.to_string(),name:_product.name.to_string()};
+            let p:Product = Product{id:_product.id.to_string(),
+                product_type:_product.product_type.to_string(),name:_product.name.to_string()};
             let data = product::update(p).await?;
             return Ok(HttpResponse::Ok().json(data));
         } 
@@ -34,7 +35,8 @@ pub async fn update_product(req: HttpRequest,_product: web::Json<Product>) -> Re
 pub async fn add_product(req: HttpRequest,_product:web::Json<Product>) -> Result<HttpResponse,MyError>{
     if let Some(hdr) = req.headers().get(http::header::CONTENT_TYPE) {
         if let Ok(_s) = hdr.to_str() {
-            let p:Product = Product{id:_product.id.to_string(),product_type:_product.product_type.to_string(),name:_product.name.to_string()};
+            let p:Product = Product{id:_product.id.to_string(),
+                product_type:_product.product_type.to_string(),name:_product.name.to_string()};
             let data = product::insert(p).await?;
             return Ok(HttpResponse::Ok().json(data));   
         }
