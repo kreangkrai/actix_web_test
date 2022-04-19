@@ -5,3 +5,4 @@ pub mod databases;
 pub mod repository;
 pub mod errors;
 pub mod tests;
+pub mod auth;

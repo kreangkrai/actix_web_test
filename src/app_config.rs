@@ -1,35 +1,22 @@
 use actix_web::web;
-use crate::handlers::{parts,products};
+use crate::handlers::{user};
 
 pub fn config_app(cfg: &mut web::ServiceConfig){
     cfg.service(
-        web::scope("/products")
+        web::scope("/users")
         .service(
             web::resource("")
-            .route(web::get().to(products::get_products))
-            .route(web::put().to(products::update_product))
-            .route(web::post().to(products::add_product)),
+            .route(web::get().to(user::get_users))
+            .route(web::put().to(user::update_user))
+            .route(web::post().to(user::add_user)),
         )
         .service(
-            web::scope("/{product_id}")
+            web::scope("/{user_id}")
             .service(
                 web::resource("")
-                .route(web::get().to(products::get_productbyid))               
-                .route(web::delete().to(products::remove_product)),
+                .route(web::get().to(user::get_user))               
+                .route(web::delete().to(user::remove_user)),
             )           
-        ),       
-    ).service(
-        web::scope("/parts")
-        .service(
-            web::resource("")
-            .route(web::get().to(parts::get_part))
-            .route(web::put().to(parts::update_part))
-            .route(web::post().to(parts::add_part)),
-        )
-        .service(
-            web::resource("/{part_id}")
-            .route(web::get().to(parts::get_partbyid))
-            .route(web::delete().to(parts::remove_part)),
-        ),       
-    );
+        ),
+    );   
 }

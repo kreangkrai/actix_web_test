@@ -1,8 +1,9 @@
 use serde::{Deserialize,Serialize};
 
 #[derive(Deserialize,Serialize,Debug)]
-pub struct Product{
-    pub id:String,
-    pub product_type:String,
+pub struct User{
+    pub id:i32,
     pub name:String,
+    pub password:String,
+    pub email:String,
 }

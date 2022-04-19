@@ -1,21 +1,21 @@
 //Unit Test
 #[cfg(test)]
 mod unit_tests{
-use crate::handlers::parts::*;
+use crate::handlers::user::get_users;
 use actix_web::{http::{header::ContentType,StatusCode},test};
 #[actix_web::test]
     async fn test_gets_ok() {
         let req = test::TestRequest::default()
             .insert_header(ContentType::plaintext())
             .to_http_request();
-        let resp = get_part(req).await.unwrap();
+        let resp = get_users(req).await.unwrap();
         assert_eq!(resp.status(), StatusCode::OK);
     }
 
     #[actix_web::test]
     async fn test_gets_not_ok() {
         let req = test::TestRequest::default().to_http_request();
-        let resp = get_part(req).await.unwrap();
+        let resp = get_users(req).await.unwrap();
         assert_eq!(resp.status(), StatusCode::BAD_REQUEST);
     }
 }
@@ -24,11 +24,11 @@ use actix_web::{http::{header::ContentType,StatusCode},test};
 #[cfg(test)]
 mod integration_tests {
     use actix_web::{http::{header::ContentType,StatusCode},test,web,App};
-    use crate::handlers::parts::*;
+    use crate::handlers::user::*;
     use actix_service::Service;
     #[actix_web::test]
     async fn test_get() {
-        let app = test::init_service(App::new().route("/", web::get().to(get_part))).await;                                  
+        let app = test::init_service(App::new().route("/", web::get().to(get_users))).await;                                  
         let req = test::TestRequest::default()
             .insert_header(ContentType::plaintext())
             .to_request();
@@ -38,7 +38,7 @@ mod integration_tests {
 
     #[actix_web::test]
     async fn test_post() {
-        let app = test::init_service(App::new().service(web::resource("/").to(get_part))).await;
+        let app = test::init_service(App::new().service(web::resource("/").to(get_users))).await;
         let req = test::TestRequest::with_uri("/").to_request();
         let resp = app.call(req).await.unwrap();
         assert_eq!(resp.status(),StatusCode::BAD_REQUEST);

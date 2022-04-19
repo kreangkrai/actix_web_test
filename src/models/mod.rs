@@ -1,5 +1,3 @@
-pub mod product;
-pub mod part;
+pub mod user;
 
-pub use product::Product;
-pub use part::Part;
+pub use user::User;
