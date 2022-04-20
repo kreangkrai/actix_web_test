@@ -4,7 +4,7 @@ use tokio_postgres::{NoTls};
 use crate::models::{User};
 use sha2::{Sha256,Digest};
 use crate::auth::{tokens,Claims};
-use chrono::prelude::*;
+use chrono::{Duration,Utc};
 use serde_json::json;
 
 pub async fn gets()->Result<Vec<User>,tokio_postgres::Error>{
@@ -90,8 +90,12 @@ pub async fn insert(p : User)->Result<serde_json::Value,tokio_postgres::Error>{
     let result = format!("{:x}", hasher.finalize());
 
     // token
-    let time = Utc::now().timestamp_millis();
-    let cliame:Claims = Claims::new(p.name.clone(),time,"Mee".to_string());
+    let issue_date = Utc::now().timestamp_millis();
+    let expire_date = (Utc::now() + Duration::days(30)).timestamp_millis();
+    let role = String::from("Admin");
+    let name = p.name.clone();
+    let sub = p.email.clone();
+    let cliame:Claims = Claims::new(sub,name,role,issue_date,expire_date);
     let token = tokens::encoder(cliame);
 
     let rows = client.execute(&command, &[&p.id,&p.name,&result,&p.email,&token.clone().unwrap()]).await?;

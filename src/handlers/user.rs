@@ -1,13 +1,20 @@
-use actix_web::{http,web,HttpResponse,HttpRequest};
+use actix_web::{http,web,body,HttpResponse,HttpRequest};
 use crate::models::{User};
 use crate::repository::{user};
 use crate::errors::MyError;
+use crate::auth::{tokens};
 
 pub async fn get_users(req: HttpRequest) -> Result<HttpResponse,MyError>{ 
-    if let Some(hdr) = req.headers().get(http::header::CONTENT_TYPE) {
+    if let Some(hdr) = req.headers().get(http::header::AUTHORIZATION) {
         if let Ok(_s) = hdr.to_str() {
-            let data = user::gets().await?;
-            return Ok(HttpResponse::Ok().json(data));
+            let decode = tokens::decoder(_s.split_ascii_whitespace().nth(1).unwrap());
+            if let Ok(data) = decode{
+                println!("{:#?}",data);
+                let data = user::gets().await?;
+                return Ok(HttpResponse::Ok().json(data));
+            }else{
+                return Ok(HttpResponse::with_body(http::StatusCode::from_u16(401).unwrap(), body::BoxBody::new(String::from("No Authorized"))));
+            }           
         }
     }
     Ok(HttpResponse::BadRequest().into())
